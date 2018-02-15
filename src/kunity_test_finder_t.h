@@ -3,37 +3,23 @@
 
 //{ global include region
 
+#include <kunity_t.h>
+#include <linux/list.h>
+#include <linux/module.h>
 #include <linux/types.h>
 
 //}
 
-//{ local include region
-
-//}
-
-
 //{ define region
+#ifndef KUNITY_DEFAULT_TEST_NAME_FITER
+#define KUNITY_DEFAULT_TEST_NAME_FITER KUNITY_DEFAULT_TEST_NAME_PREFIX*
+#endif
 
-//}
-
-
-//{ enum region
-
-typedef enum result_code_eTag
-{
-    OK,
-    ERROR_NULL_ARGUMENT,
-    ERROR_INVALID_ARGUMENT,
-    ERROR_INVALID_OPERATION
-} result_code_e, *ptr_result_code_e;
-
-//}
-
-
-//{ typedef region
-
-typedef void (*test_function_ptr) (void);
-
+#ifndef KUNITY_DEFAULT_TEST_NAME_FITER_STR
+#define STR(s) #s
+#define XSTR(s) STR(s)
+#define KUNITY_DEFAULT_TEST_NAME_FITER_STR XSTR(KUNITY_DEFAULT_TEST_NAME_FITER)
+#endif
 //}
 
 //{ struct region
@@ -42,31 +28,30 @@ typedef void (*test_function_ptr) (void);
 
 #pragma pack(pop)
 
-typedef struct test_sTag
-{
-    const char * name;
-    const char * modul_name;
-    test_function_ptr test_function;
-} test_s, *ptr_test_s;
-
-typedef struct test_list_item_sTag
-{
+typedef struct test_list_item_sTag {
+    struct list_head test_head;
     ptr_test_s test;
-    struct test_list_item_sTag * next;
 } test_list_item_s, *ptr_test_list_item_s;
 
-typedef struct test_list_sTag
-{
-    size_t count;
-    ptr_test_list_item_s head;
+typedef struct test_module_list_item_sTag {
+    struct list_head test_module_head;
+    const struct module* test_module;
+    struct list_head test_list;
+} test_module_list_item_s, *ptr_test_module_list_item_s;
+
+typedef struct test_list_sTag {
+    struct list_head test_module_list;
 } test_list_s, *ptr_test_list_s;
 
-typedef struct test_query_sTag
-{
-    const char * test_function_filter;
-    const char * module_filter;
+typedef struct test_query_sTag {
+    const char* test_function_filter;
+    const char* module_filter;
     ptr_test_list_s result_list;
 } test_query_s, *ptr_test_query_s;
+
+typedef result_code_e (*test_list_iterator)(/* in */ const ptr_test_list_item_s);
+
+typedef result_code_e (*test_module_list_iterator)(/* in */ const ptr_test_module_list_item_s);
 
 //}
 

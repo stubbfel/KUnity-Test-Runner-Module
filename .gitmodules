@@ -1,3 +1,8 @@
-[submodule "test/lib/KUnity"]
-	path = test/lib/KUnity
-	url = gitlab@git.stubbe.rocks:kttd/KUnity-Core.git
+[submodule "dev-utility/CMake-Module/BuildKernelModule"]
+	path = dev-utility/CMake-Module/BuildKernelModule
+	url = ../CMake-Module-KernelModuleBuilder.git
+	branch = master
+[submodule "lib/KUnity"]
+	path = lib/KUnity
+	url = ../KUnity-Core.git
+	branch = master
